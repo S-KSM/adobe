@@ -9,18 +9,19 @@ from pptx.dml.color import RGBColor
 df = pd.read_csv('revenue_data.csv')
 latest_revenue = df['revenue'].iloc[-1]
 
-# Create a new PowerPoint presentation from the template
-prs = Presentation('template.pptx')
+# Create a new PowerPoint presentation
+prs = Presentation()
 
-# Select the first slide and update the title and subtitle
-slide = prs.slides[0]
+# Add a new slide with the title and subtitle
+slide = prs.slides.add_slide(prs.slide_layouts[1])
 title = slide.shapes.title
 title.text = f"The team hit ${latest_revenue}"
 subtitle = slide.placeholders[1]
 subtitle.text = "Weekly Revenue Report"
 
-# Update the table with the latest revenue value
-table = slide.shapes[2].table
+# Add a table with 5 columns and 2 rows
+table = slide.shapes.add_table(rows=2, cols=5, left=Inches(0.5), top=Inches(2.0), width=Inches(9.0), height=Inches(1.0)).table
+table.cell(0, 0).text = "Revenue"
 table.cell(1, 0).text = "{:.2f}".format(latest_revenue)
 
 # Add a chart to show week-over-week change in revenue
@@ -39,16 +40,16 @@ data_labels = plot.data_labels
 data_labels.font.size = Pt(10)
 
 # Add a title for the notes section
-notes_title = slide.shapes[3].text_frame
+notes_title = slide.shapes.add_textbox(left=Inches(0.5), top=Inches(5), width=Inches(9), height=Inches(0.5)).text_frame
 notes_title.text = "Current Notes"
 notes_title.paragraphs[0].font.bold = True
 
 # Add two bullet points for the notes
-bullet1 = slide.shapes[4].text_frame
+bullet1 = slide.shapes.add_textbox(left=Inches(0.5), top=Inches(5.5), width=Inches(9), height=Inches(0.25)).text_frame
 bullet1.paragraphs[0].text = f"Revenue has increased by 10% compared to last week."
 bullet1.paragraphs[0].font.bold = True
 
-bullet2 = slide.shapes[5].text_frame
+bullet2 = slide.shapes.add_textbox(left=Inches(0.5), top=Inches(6), width=Inches(9), height=Inches(0.25)).text_frame
 bullet2.paragraphs[0].text = "We expect revenue to continue to grow in the coming weeks."
 bullet2.paragraphs[0].font.bold = True
 
